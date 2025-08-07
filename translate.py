@@ -1,6 +1,6 @@
 import requests
 import bs4
-
+import time
 
 def get_translate(word):
     def fetch_page(word):
