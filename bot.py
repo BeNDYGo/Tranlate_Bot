@@ -4,11 +4,13 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 import time
 from translate import get_translate
 
-def keyboard():
+def keyboard(original_word):
     builder = InlineKeyboardBuilder()
-    builder.button(text="wooordhunt", callback_data="wooordhunt")
-    keyboard = builder.as_markup()
-    return keyboard
+    builder.button(
+        text="wooordhunt", 
+        callback_data=f"wooordhunt:{original_word}"  # Добавляем слово в callback
+    )
+    return builder.as_markup()
 
 TOKEN = '7772137371:AAHr8CudNzCombH0CWf4D5DHacw1Eo3U43E'
 
@@ -21,15 +23,15 @@ async def take_word(message):
     word = message.text
     wooo_translate, google_translate = await get_translate(word)
     result = google_translate
-    if wooo_translate: await message.answer(result, reply_markup=keyboard())
+    if wooo_translate: await message.answer(result, reply_markup=keyboard(word))
     else: await message.answer(result)
 
     print(f'{time.strftime("%H:%M:%S")}|[{message.from_user.first_name} {message.from_user.username}]: {message.text}')
     print(f'{time.strftime("%H:%M:%S")}|[бот]: {result}')
 
-@dp.callback_query(F.data.startswith("wooordhunt"))
+@dp.callback_query(F.data.startswith("wooordhunt:"))
 async def callback_handler(callback):
-    word = callback.message.text
+    word = callback.data.split(":", 1)[1]
     wooo_translate, google_translate = await get_translate(word)
     result = wooo_translate
     await callback.message.edit_text(result)

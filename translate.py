@@ -23,7 +23,6 @@ def get_translate_wooo(word):
 async def get_translate_google(wood):
     resultEN = await translator.translate(wood, dest="en")
     resultRU = await translator.translate(wood, dest="ru")
-    print(resultEN, resultRU)
     for translare in (resultEN.text, resultRU.text):
         if translare.lower() != wood.lower(): 
             return translare
