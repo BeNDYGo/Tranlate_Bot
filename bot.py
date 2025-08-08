@@ -35,6 +35,7 @@ async def callback_handler(callback):
     wooo_translate, google_translate = await get_translate(word)
     result = wooo_translate
     await callback.message.edit_text(result)
+    print(f'{time.strftime("%H:%M:%S")}|[бот call]: {result}')
 
 print("Начало нового сеанса")
 async def main(): await dp.start_polling(bot)
