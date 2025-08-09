@@ -1,8 +1,11 @@
 import requests
 import bs4
-import time
+import asyncio
+from googletrans import Translator
 
-def get_translate(word):
+translator = Translator()
+
+def get_translate_wooo(word):
     def fetch_page(word):
         url = f'https://wooordhunt.ru/word/{word}'
         response = requests.get(url)
@@ -12,14 +15,29 @@ def get_translate(word):
         if content: return content.text
         block = soup.find(class_='t_inline')
         if block: return block.text
-        return 'ошибка'
-
-
+        return None
+    if ' ' in word: return None
     word_page = fetch_page(word)
     return translate(word_page)
 
-if __name__ == '__main__':
+async def get_translate_google(wood):
+    resultEN = await translator.translate(wood, dest="en")
+    resultRU = await translator.translate(wood, dest="ru")
+    for translare in (resultEN.text, resultRU.text):
+        if translare.lower() != wood.lower(): 
+            return translare
+
+
+async def get_translate(word):
+    wooo_translate = get_translate_wooo(word)
+    google_translate = await get_translate_google(word)
+    return wooo_translate, google_translate
+
+
+async def main():
     while True:
         word = input('Слово: ')
-        #word = 'fetch'
-        print(get_translate(word))
+        res = await get_translate(word)
+        print(res)
+if __name__ == '__main__':
+    asyncio.run(main())

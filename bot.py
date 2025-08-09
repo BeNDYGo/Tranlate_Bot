@@ -1,71 +1,42 @@
-import telebot
-from translate import *
+import asyncio
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 import time
+from translate import get_translate
 
-TOKEN = "8106791048:AAE0GUGxMnzEE_sOH87rCdjqpW_rp7Uyz2o"
-bot = telebot.TeleBot(TOKEN)
+def keyboard(original_word):
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="wooordhunt", 
+        callback_data=f"wooordhunt:{original_word}"  # Добавляем слово в callback
+    )
+    return builder.as_markup()
 
-@bot.message_handler(commands=['start'])
-def welcom(message):
-    bot.send_message(message.chat.id, 'Пришли слово для перевода')
+TOKEN = '8106791048:AAE0GUGxMnzEE_sOH87rCdjqpW_rp7Uyz2o'
 
-@bot.message_handler(func=lambda _: True)
-def take_word(message):
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
+
+@dp.message(~F.command)
+async def take_word(message):
+    if '/' in message.text: return 
+    word = message.text
+    wooo_translate, google_translate = await get_translate(word)
+    result = google_translate
+    if wooo_translate: await message.answer(result, reply_markup=keyboard(word))
+    else: await message.answer(result)
+
     print(f'{time.strftime("%H:%M:%S")}|[{message.from_user.first_name} {message.from_user.username}]: {message.text}')
-    result = get_translate(message.text)
     print(f'{time.strftime("%H:%M:%S")}|[бот]: {result}')
-    if result: bot.send_message(message.chat.id, str(result))
-    else: bot.send_message(message.chat.id, str('ошибка'))
 
-
-print("Начало нового сеанса")
-# Запуск бота
-bot.polling(none_stop=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''import telebot
-from translate import *
-from bd import *
-
-TOKEN = "8106791048:AAE0GUGxMnzEE_sOH87rCdjqpW_rp7Uyz2o"
-bot = telebot.TeleBot(TOKEN)
-init_db()
-
-@bot.message_handler(commands=['start'])
-def welcom(message):
-    set_user_flag(message.chat.id, True)
-    bot.send_message(message.chat.id, 'Пришли слово для перевода')
-
-@bot.message_handler(func=lambda _: True)
-def take_word(message):
-    print(message.from_user.first_name, message.from_user.username ,message.text)
-
-    if get_user_flag(message.chat.id):
-        set_user_flag(message.chat.id, False)
-        result = get_translate(message.text)
-        print(f'бот ответил {result}')
-        if result: bot.send_message(message.chat.id, str(result))
-        else: bot.send_message(message.chat.id, str('ошибка'))
-
+@dp.callback_query(F.data.startswith("wooordhunt:"))
+async def callback_handler(callback):
+    word = callback.data.split(":", 1)[1]
+    wooo_translate, google_translate = await get_translate(word)
+    result = wooo_translate
+    await callback.message.edit_text(result)
+    print(f'{time.strftime("%H:%M:%S")}|[бот call]: {result}')
 
 print("Начало нового сеанса")
-# Запуск бота
-bot.polling(none_stop=True)
-'''
+async def main(): await dp.start_polling(bot)
+asyncio.run(main())
