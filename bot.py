@@ -10,7 +10,7 @@ def keyboard():
     keyboard = builder.as_markup()
     return keyboard
 
-TOKEN = '7772137371:AAHr8CudNzCombH0CWf4D5DHacw1Eo3U43E'
+TOKEN = ''
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
