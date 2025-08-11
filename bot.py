@@ -34,7 +34,8 @@ async def take_word(message):
 @dp.callback_query(F.data.startswith("wooordhunt:"))
 async def callback_handler(callback):
     word = callback.data.split(":", 1)[1]
-    wooo_translate = get_translate_wooo(word)
+    await callback.message.edit_text(sample)
+    wooo_translate = await get_translate_wooo(word)
     await callback.message.edit_text(wooo_translate)
     print(f'{time.strftime("%H:%M:%S")}|[бот call]: {wooo_translate}')
 
