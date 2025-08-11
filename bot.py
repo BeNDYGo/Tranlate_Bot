@@ -12,7 +12,7 @@ def keyboard(original_word):
     )
     return builder.as_markup()
 
-TOKEN = '8106791048:AAE0GUGxMnzEE_sOH87rCdjqpW_rp7Uyz2o'
+TOKEN = ''
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -42,4 +42,5 @@ async def callback_handler(callback):
 print("Начало нового сеанса")
 async def main(): await dp.start_polling(bot)
 asyncio.run(main())
+
 
