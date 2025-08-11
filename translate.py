@@ -1,14 +1,19 @@
-import requests
+import aiohttp
 import bs4
 import asyncio
 from googletrans import Translator
 
 
 def get_translate_wooo(word):
-    def fetch_page(word):
+    async def fetch_page(word):
         url = f'https://wooordhunt.ru/word/{word}'
-        response = requests.get(url)
-        return bs4.BeautifulSoup(response.text, 'lxml')
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, timeout=10) as response:
+                    text = await response.text()
+                    return bs4.BeautifulSoup(text, 'lxml')
+        except (aiohttp.ClientError, asyncio.TimeoutError):
+            return None
     def translate(soup):
         content = soup.find(class_='t_inline_en')
         if content: return content.text
