@@ -3,7 +3,6 @@ import bs4
 import asyncio
 from googletrans import Translator
 
-translator = Translator()
 
 def get_translate_wooo(word):
     def fetch_page(word):
@@ -21,6 +20,7 @@ def get_translate_wooo(word):
     return translate(word_page)
 
 async def get_translate_google(wood):
+    translator = Translator()
     resultEN = await translator.translate(wood, dest="en")
     resultRU = await translator.translate(wood, dest="ru")
     for translare in (resultEN.text, resultRU.text):
@@ -32,7 +32,6 @@ async def get_translate(word):
     wooo_translate = get_translate_wooo(word)
     google_translate = await get_translate_google(word)
     return wooo_translate, google_translate
-
 
 async def main():
     while True:
