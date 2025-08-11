@@ -4,7 +4,7 @@ import asyncio
 from googletrans import Translator
 
 
-def get_translate_wooo(word):
+async def get_translate_wooo(word):
     async def fetch_page(word):
         url = f'https://wooordhunt.ru/word/{word}'
         try:
@@ -21,7 +21,7 @@ def get_translate_wooo(word):
         if block: return block.text
         return None
     if ' ' in word: return None
-    word_page = fetch_page(word)
+    word_page = await fetch_page(word)
     return translate(word_page)
 
 async def get_translate_google(wood):
@@ -34,7 +34,7 @@ async def get_translate_google(wood):
 
 
 async def get_translate(word):
-    wooo_translate = get_translate_wooo(word)
+    wooo_translate = await get_translate_wooo(word)
     google_translate = await get_translate_google(word)
     return wooo_translate, google_translate
 
