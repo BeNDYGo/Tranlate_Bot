@@ -8,7 +8,7 @@ def keyboard(original_word):
     builder = InlineKeyboardBuilder()
     builder.button(
         text="wooordhunt", 
-        callback_data=f"wooordhunt:{original_word}"  # Добавляем слово в callback
+        callback_data=f"wooordhunt:{original_word}"
     )
     return builder.as_markup()
 
@@ -17,14 +17,15 @@ TOKEN = ''
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-@dp.message(~F.command)
+@dp.message(~F.command & F.text)
 async def take_word(message):
-    if '/' in message.text: return 
     word = message.text
+    sample = f'{word}'
+    bot_message = await message.answer(sample)
     wooo_translate, google_translate = await get_translate(word)
     result = google_translate
-    if wooo_translate: await message.answer(result, reply_markup=keyboard(word))
-    else: await message.answer(result)
+    if wooo_translate: await bot_message.edit_text((result), reply_markup=keyboard(word))
+    else: await bot_message.answer((result))
 
     print(f'{time.strftime("%H:%M:%S")}|[{message.from_user.first_name} {message.from_user.username}]: {message.text}')
     print(f'{time.strftime("%H:%M:%S")}|[бот]: {result}')
