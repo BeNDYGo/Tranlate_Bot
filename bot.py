@@ -28,7 +28,7 @@ async def take_word(message):
     google_translate = await get_translate_google(word)
     bot_message = await bot_message.edit_text(google_translate)
     print(f'{time.strftime("%H:%M:%S")}|[бот]: {google_translate}')
-    wooo_translate = get_translate_wooo(word)
+    wooo_translate = await get_translate_wooo(word)
     if wooo_translate: await bot_message.edit_text(google_translate, reply_markup=keyboard(word))
 
 @dp.callback_query(F.data.startswith("wooordhunt:"))
