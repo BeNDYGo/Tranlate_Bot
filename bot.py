@@ -20,7 +20,7 @@ dp = Dispatcher()
 @dp.message(~F.command & F.text)
 async def take_word(message):
     word = message.text
-    sample = f'{word}'
+    sample = f'loading...'
     bot_message = await message.answer(sample)
     wooo_translate, google_translate = await get_translate(word)
     result = google_translate
