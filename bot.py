@@ -16,7 +16,7 @@ def keyboard(original_word):
     )
     return builder.as_markup()
 
-TOKEN = '7772137371:AAHr8CudNzCombH0CWf4D5DHacw1Eo3U43E'
+TOKEN = ''
 BOT = Bot(token=TOKEN)
 dp = Dispatcher()
 sample = f'loading...'
