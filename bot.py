@@ -26,7 +26,7 @@ class AddWord(StatesGroup):
     waiting_for_word = State()
     waiting_for_dell = State()
 
-def keyboard(word, translate):
+def keyboard_learn(word, translate):
     builder = InlineKeyboardBuilder()
     builder.button(
         text='translate',
@@ -34,11 +34,23 @@ def keyboard(word, translate):
     )
     return builder.as_markup()
 
-def keyboard_translate(word):
+def keyboard_translate(word, google_translate):
     builder = InlineKeyboardBuilder()
     builder.button(
         text='wooordhunt',
         callback_data=f'wooordhunt:{word}'
+    )
+    builder.button(
+        text='add',
+        callback_data=f'add:{word},{google_translate}'
+    )
+    return builder.as_markup()
+
+def keyboard_add(word, translate):
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text='add',
+        callback_data=f'add:{word},{translate}'
     )
     return builder.as_markup()
 
@@ -59,7 +71,7 @@ async def start(message):
         await message.answer("Ваш список слов пуст")
     else:
         word, translate = random.choice(words)[0].split(' - ')
-        await message.answer(word, reply_markup=keyboard(word, translate))
+        await message.answer(word, reply_markup=keyboard_learn(word, translate))
 
 @dp.message(Command("add"))
 async def add(message, state):
@@ -97,14 +109,10 @@ async def take_word(message):
         print(f'{time.strftime("%H:%M:%S")}|[{message.from_user.first_name} {message.from_user.username}]: {message.text}')
         bot_message = await message.answer(sample)
         google_translate = await get_translate_google(word)
-        bot_message = await bot_message.edit_text(google_translate)
+        bot_message = await bot_message.edit_text(google_translate, reply_markup=keyboard_add(word, google_translate))
         print(f'{time.strftime("%H:%M:%S")}|[бот]: {google_translate}')
         wooo_translate = await get_translate_wooo(word)
-        if wooo_translate: await bot_message.edit_text(google_translate, reply_markup=keyboard_translate(word))
-
-def next(message, words):
-    word, translate = random.choice(words)[0].split(' - ')
-    return message.edit_text(word, reply_markup=keyboard(word, translate))
+        if wooo_translate: await bot_message.edit_text(google_translate, reply_markup=keyboard_translate(word, google_translate))    
 
 @dp.callback_query()
 async def callback(query):
@@ -116,13 +124,18 @@ async def callback(query):
         if not words:
             await message.answer("Ваш список слов пуст")
         else:
-            await next(message, words)
+            word, translate = random.choice(words)[0].split(' - ')
+            await message.edit_text(word, reply_markup=keyboard_learn(word, translate))
+
     elif 'wooordhunt:' in callback_data:
         word = callback_data.split(':')[1]
         await message.edit_text(sample)
         wooo_translate = await get_translate_wooo(word)
         await message.edit_text(wooo_translate)
         print(f'{time.strftime("%H:%M:%S")}|[бот call]: {wooo_translate}')
+    elif 'add:' in callback_data:
+        word, translate = callback_data.split(':')[1].split(',')
+        db.add_word(user, f'{word} - {translate}')
     else:
         await message.edit_text(f'{callback_data.split(',')[0]} - {callback_data.split(',')[1]}', reply_markup=next_word())
 

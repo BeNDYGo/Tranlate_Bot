@@ -76,7 +76,8 @@ data = ['enough - достаточно',
 'own - собственный',
 'void - пустота',
 'capture - захватывать/снимать',
-'determine - определять']
+'determine - определять',
+'faith - вера']
 
 if __name__ == "__main__":
     for i in all():
