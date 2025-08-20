@@ -8,14 +8,6 @@ import random
 from aiogram.fsm.state import State, StatesGroup
 import db
 
-def keyboard(original_word):
-    builder = InlineKeyboardBuilder()
-    builder.button(
-        text="wooordhunt", 
-        callback_data=f"wooordhunt:{original_word}"
-    )
-    return builder.as_markup()
-
 TOKEN = ''
 BOT = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -26,6 +18,14 @@ class AddWord(StatesGroup):
     waiting_for_word = State()
     waiting_for_dell = State()
 
+def keyboard(original_word):
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="wooordhunt", 
+        callback_data=f"wooordhunt:{original_word}"
+    )
+    return builder.as_markup()
+    
 def keyboard_learn(word, translate):
     builder = InlineKeyboardBuilder()
     builder.button(
