@@ -18,6 +18,14 @@ class Wait(StatesGroup):
     waiting_for_word = State()
     waiting_for_dell = State()
 
+def del_keyboard():
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="X", 
+        callback_data=f"dell"
+    )
+    return builder.as_markup()
+
 def keyboard(original_word):
     builder = InlineKeyboardBuilder()
     builder.button(
@@ -110,7 +118,7 @@ async def process_dell(message, state):
 async def all_words(message):
     user = message.from_user.username
     user_all_words = db.get_all(user)
-    await message.answer(user_all_words)
+    await message.answer(user_all_words, reply_markup=del_keyboard())
 
 @dp.message(F.text)
 async def take_word(message):
