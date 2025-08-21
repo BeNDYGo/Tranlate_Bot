@@ -154,7 +154,7 @@ async def callback(query):
     elif 'add:' in callback_data:
         word, translate = callback_data.split(':')[1].split(',')
         db.add_word(user, f'{word} - {translate}')
-        message.answer(f'добавлено [{word} - {translate}]')
+        await message.answer(f'добавлено [{word} - {translate}]', reply_markup=del_keyboard())
     elif callback_data == 'dell':
         await message.delete()
     else:

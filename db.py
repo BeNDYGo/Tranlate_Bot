@@ -1,6 +1,9 @@
 import sqlite3
+from pathlib import Path
+import os
 
-DB_NAME = 'db.db'
+if os.name == 'posix': DB_NAME = '/home/TranslateDB.db'
+else: DB_NAME = str(Path.home() / 'TranslateDB.db')
 
 db = sqlite3.connect(DB_NAME)
 cursor = db.cursor()
@@ -90,7 +93,8 @@ data = ['enough - достаточно',
 'whale - кит',
 'depends - зависит от',
 'revengeful - мстительный',
-'noise - шум']
+'noise - шум',
+"schemers - интриги"]
 
 if __name__ == "__main__":
     all = get_all('BeNDYGo0')
