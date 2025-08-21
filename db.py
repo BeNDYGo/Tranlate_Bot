@@ -93,6 +93,11 @@ data = ['enough - достаточно',
 'noise - шум']
 
 if __name__ == "__main__":
-    print(get_all('BeNDYGo0'))
+    all = get_all('BeNDYGo0')
+    #for i in data:
+    #    if i not in all:
+    #        add_word('BeNDYGo0', i)
+    #        print(i)
     #db.commit()
+    print(all)
     db.close()
