@@ -24,6 +24,10 @@ def keyboard(original_word):
         text="wooordhunt", 
         callback_data=f"wooordhunt:{original_word}"
     )
+    builder.button(
+        text="X", 
+        callback_data=f"dell"
+    )
     return builder.as_markup()
     
 def keyboard_learn(word, translate):
@@ -142,14 +146,16 @@ async def callback(query):
     elif 'add:' in callback_data:
         word, translate = callback_data.split(':')[1].split(',')
         db.add_word(user, f'{word} - {translate}')
+        message.answer(f'добавлено [{word} - {translate}]')
+    elif callback_data == 'dell':
+        await message.delete()
     else:
         await message.edit_text(f'{callback_data.split(',')[0]} - {callback_data.split(',')[1]}', reply_markup=next_word())
-
 
 async def main():
     db.init()
     print("Bot started")
-    await dp.start_polling(BOT)
+    await dp.start_polling(BOT, timeout=120)
 
 if __name__ == "__main__":
     asyncio.run(main())
