@@ -24,7 +24,7 @@ def del_word(username, inputUser):
 def get_all(username):
     result = ''
     all = cursor.execute("SELECT data FROM UsersData WHERE username = ?", (username,))
-    for i in all.fetchall(): result += i[0] + '\n'
+    for i in all.fetchall(): result += f'"{i[0]}",{"\n"}'
     return result
 
 data = ['enough - достаточно',
@@ -79,9 +79,20 @@ data = ['enough - достаточно',
 'void - пустота',
 'capture - захватывать/снимать',
 'determine - определять',
-'faith - вера']
+'faith - вера',
+'exhausted - измученный',
+'revenge - месть',
+'advertise - рекламировать',
+'waste - напрасно потрачено',
+'incredibly - невероятно',
+'annoying - раздражающий',
+'pimp - сутенер',
+'whale - кит',
+'depends - зависит от',
+'revengeful - мстительный',
+'noise - шум']
 
 if __name__ == "__main__":
     print(get_all('BeNDYGo0'))
-    db.commit()
+    #db.commit()
     db.close()
