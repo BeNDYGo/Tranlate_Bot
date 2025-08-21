@@ -21,9 +21,11 @@ def del_word(username, inputUser):
     cursor.execute("DELETE FROM UsersData WHERE username = ? AND data = ?", (username, inputUser))
     db.commit()
 
-def all():
-    cursor.execute("SELECT * FROM UsersData")
-    return cursor.fetchall()
+def get_all(username):
+    result = ''
+    all = cursor.execute("SELECT data FROM UsersData WHERE username = ?", (username,))
+    for i in all.fetchall(): result += i[0] + '\n'
+    return result
 
 data = ['enough - достаточно',
 'relationship - отношения',
@@ -80,8 +82,6 @@ data = ['enough - достаточно',
 'faith - вера']
 
 if __name__ == "__main__":
-    for i in all():
-        print(i)
-        #add_word('BeNDYGo0', i)
+    print(get_all('BeNDYGo0'))
     db.commit()
     db.close()

@@ -8,13 +8,13 @@ import random
 from aiogram.fsm.state import State, StatesGroup
 import db
 
-TOKEN = ''
+TOKEN = '8106791048:AAE0GUGxMnzEE_sOH87rCdjqpW_rp7Uyz2o'
 BOT = Bot(token=TOKEN)
 dp = Dispatcher()
 sample = f'loading...'
 
 
-class AddWord(StatesGroup):
+class Wait(StatesGroup):
     waiting_for_word = State()
     waiting_for_dell = State()
 
@@ -76,14 +76,14 @@ async def start(message):
 @dp.message(Command("add"))
 async def add(message, state):
     await message.answer("Введите слово в формате: слово - перевод")
-    await state.set_state(AddWord.waiting_for_word)
+    await state.set_state(Wait.waiting_for_word)
 
-@dp.message(AddWord.waiting_for_word)
+@dp.message(Wait.waiting_for_word)
 async def process_word(message, state):
     user = message.from_user.username
     input_text = message.text
     if ' - ' not in input_text:
-        await message.answer("Неверный формат. Используйте: слово - перевод")
+        await message.answer("Неверный формат")
         return
     db.add_word(user, input_text)
     await message.answer("Слово добавлено")
@@ -92,15 +92,21 @@ async def process_word(message, state):
 @dp.message(Command("del"))
 async def dell(message, state):
     await message.answer("Введите слово")
-    await state.set_state(AddWord.waiting_for_dell)
+    await state.set_state(Wait.waiting_for_dell)
 
-@dp.message(AddWord.waiting_for_dell)
+@dp.message(Wait.waiting_for_dell)
 async def process_dell(message, state):
     user = message.from_user.username
     input_text = message.text
     db.del_word(user, input_text)
     await message.answer("ок - 👍")
     await state.clear()
+
+@dp.message(Command('all'))
+async def all_words(message):
+    user = message.from_user.username
+    user_all_words = db.get_all(user)
+    await message.answer(user_all_words)
 
 @dp.message(F.text)
 async def take_word(message):
@@ -112,7 +118,7 @@ async def take_word(message):
         bot_message = await bot_message.edit_text(google_translate, reply_markup=keyboard_add(word, google_translate))
         print(f'{time.strftime("%H:%M:%S")}|[бот]: {google_translate}')
         wooo_translate = await get_translate_wooo(word)
-        if wooo_translate: await bot_message.edit_text(google_translate, reply_markup=keyboard_translate(word, google_translate))    
+        if wooo_translate: await bot_message.edit_text(google_translate, reply_markup=keyboard_translate(word, google_translate))
 
 @dp.callback_query()
 async def callback(query):
