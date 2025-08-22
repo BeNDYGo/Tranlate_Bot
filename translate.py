@@ -20,14 +20,15 @@ async def get_translate_wooo(word):
         block = soup.find(class_='t_inline')
         if block: return block.text
         return None
+    
     if ' ' in word: return None
     word_page = await fetch_page(word)
     return translate(word_page)
 
 async def get_translate_google(wood):
     translator = Translator()
-    resultEN = await translator.translate(wood, dest="en")
-    resultRU = await translator.translate(wood, dest="ru")
+    resultEN = await asyncio.to_thread(translator.translate(wood, dest="en"))
+    resultRU = await asyncio.to_thread(translator.translate(wood, dest="ru"))
     for translare in (resultEN.text, resultRU.text):
         if translare.lower() != wood.lower(): 
             return translare.lower()

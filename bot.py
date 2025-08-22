@@ -163,7 +163,7 @@ async def callback(query):
 async def main():
     db.init()
     print("Bot started")
-    await dp.start_polling(BOT, timeout=120)
+    await dp.start_polling(BOT)
 
 if __name__ == "__main__":
     asyncio.run(main())
