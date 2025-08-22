@@ -2,7 +2,7 @@ import sqlite3
 from pathlib import Path
 import os
 
-if os.name == 'posix': DB_NAME = 'home/user/Рабочий стол/db.db'
+if os.name == 'posix': DB_NAME = '/home/user/Рабочий стол/db.db'
 else: DB_NAME = str(Path.home() / 'TranslateDB.db')
 
 db = sqlite3.connect(DB_NAME)
