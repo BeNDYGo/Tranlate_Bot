@@ -13,7 +13,6 @@ BOT = Bot(token=TOKEN)
 dp = Dispatcher()
 sample = f'loading...'
 
-
 class Wait(StatesGroup):
     waiting_for_word = State()
     waiting_for_dell = State()

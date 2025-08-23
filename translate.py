@@ -27,8 +27,8 @@ async def get_translate_wooo(word):
 
 async def get_translate_google(wood):
     translator = Translator()
-    resultEN = await asyncio.to_thread(translator.translate(wood, dest="en"))
-    resultRU = await asyncio.to_thread(translator.translate(wood, dest="ru"))
+    resultEN = await translator.translate(wood, dest="en")
+    resultRU = await translator.translate(wood, dest="ru")
     for translare in (resultEN.text, resultRU.text):
         if translare.lower() != wood.lower(): 
             return translare.lower()
