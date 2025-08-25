@@ -113,8 +113,9 @@ async def take_word(message):
         word = message.text
         print(f'{time.strftime("%H:%M:%S")}|[{message.from_user.first_name} {message.from_user.username}]: {message.text}')
         google_translate = await get_translate_google(word)
+        bot_message = await message.answer(sample)
         if " " not in word:
-            bot_message = await message.answer(google_translate, reply_markup=keyboard_add(word, google_translate))
+            await bot_message.edit_text(google_translate, reply_markup=keyboard_add(word, google_translate))
             print(f'{time.strftime("%H:%M:%S")}|[бот]: {google_translate}')
             wooo_translate = await get_translate_wooo(word)
             if wooo_translate: await bot_message.edit_text(google_translate, reply_markup=keyboard_translate(word, google_translate))
