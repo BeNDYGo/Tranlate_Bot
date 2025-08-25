@@ -8,7 +8,7 @@ import random
 from aiogram.fsm.state import State, StatesGroup
 import db
 
-TOKEN = '8106791048:AAE0GUGxMnzEE_sOH87rCdjqpW_rp7Uyz2o'
+TOKEN = ''
 BOT = Bot(token=TOKEN)
 dp = Dispatcher()
 sample = f'loading...'
