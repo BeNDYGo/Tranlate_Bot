@@ -2,12 +2,12 @@ import asyncio
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import time
-from V_Full.translate import get_translate_wooo, get_translate_google, get_translate
+from translate import get_translate_wooo, get_translate_google, get_translate
 from aiogram.filters.command import Command
 from aiogram.types import InlineQueryResultArticle, InputTextMessageContent
 import random
 from aiogram.fsm.state import State, StatesGroup
-import V_Full.db as db
+import db as db
 
 TOKEN = ''
 BOT = Bot(token=TOKEN)
@@ -152,7 +152,7 @@ async def inline_echo(inline_query: types.InlineQuery):
         id="1",
         title="Top_Traanslate_bot",
         description=f"Translate",
-        input_message_content=InputTextMessageContent(message_text=f"{translate}")
+        input_message_content=InputTextMessageContent(message_text=f"{text}-{translate}")
     )
     await inline_query.answer([result], cache_time=1, is_personal=True)
 
